@@ -34,7 +34,9 @@ Built with :
 - Chart.js for the mood graphs
 
 ## Note
-Please use the following credentials for testing if registration does not work -> 
-Username : sadkid123@gmail.com
-Password : sadkid@123
+
+Please use the following credentials for testing -> 
+- Username : sadkid123@gmail.com
+- Password : sadkid@123
+- (New account registration should work, incase you face any difficuilties, please use the above credentials)
 
