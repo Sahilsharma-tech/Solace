@@ -1,6 +1,8 @@
+// Mood tracking functionality
 let selectedMoodData = null;
 let moodChart = null;
 
+// Initialize mood tracker
 async function initMoodTracker() {
     await checkAuth();
     loadMoodHistory();
@@ -8,21 +10,26 @@ async function initMoodTracker() {
     loadUserPoints();
 }
 
+// Select mood
 function selectMood(mood, score) {
     selectedMoodData = { mood, moodScore: score };
     
+    // Update hidden inputs
     document.getElementById('selected-mood').value = mood;
     document.getElementById('mood-score').value = score;
     
+    // Visual feedback
     document.querySelectorAll('.mood-btn').forEach(btn => {
         btn.classList.remove('border-purple-500', 'bg-purple-50');
     });
     
     event.target.closest('.mood-btn').classList.add('border-purple-500', 'bg-purple-50');
     
+    // Scroll to form
     document.getElementById('mood-form').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
+// Handle mood form submission
 document.getElementById('mood-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -49,23 +56,28 @@ document.getElementById('mood-form')?.addEventListener('submit', async (e) => {
         if (data.success) {
             showNotification('Mood logged successfully!', 'success');
             
+            // Show AI suggestion
             if (data.suggestion) {
                 showSuggestion(data.suggestion);
             }
             
+            // Show intervention if triggered
             if (data.intervention) {
                 showNotification(`💙 ${data.intervention.name}: ${data.intervention.description}`, 'info');
             }
             
+            // Reset form
             document.getElementById('mood-form').reset();
             selectedMoodData = null;
             document.querySelectorAll('.mood-btn').forEach(btn => {
                 btn.classList.remove('border-purple-500', 'bg-purple-50');
             });
             
+            // Reload stats
             loadMoodHistory();
             loadMoodStats();
             
+            // Award points
             awardPoints('mood_log');
         }
     } catch (error) {
@@ -73,6 +85,7 @@ document.getElementById('mood-form')?.addEventListener('submit', async (e) => {
     }
 });
 
+// Show AI suggestion
 function showSuggestion(suggestion) {
     const suggestionDiv = document.getElementById('ai-suggestion');
     const suggestionText = document.getElementById('suggestion-text');
@@ -80,9 +93,11 @@ function showSuggestion(suggestion) {
     suggestionText.textContent = suggestion;
     suggestionDiv.classList.remove('hidden');
     
+    // Scroll to suggestion
     suggestionDiv.scrollIntoView({ behavior: 'smooth' });
 }
 
+// Load mood history
 async function loadMoodHistory() {
     try {
         const data = await fetchAPI('/api/mood/history?days=7');
@@ -95,6 +110,7 @@ async function loadMoodHistory() {
     }
 }
 
+// Display mood chart
 function displayMoodChart(moods) {
     const ctx = document.getElementById('mood-history-chart')?.getContext('2d');
     if (!ctx) return;
@@ -103,6 +119,7 @@ function displayMoodChart(moods) {
         moodChart.destroy();
     }
     
+    // Prepare data
     const sortedMoods = moods.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
     const labels = sortedMoods.map(m => new Date(m.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
     const scores = sortedMoods.map(m => m.moodScore);
@@ -143,6 +160,7 @@ function displayMoodChart(moods) {
     });
 }
 
+// Load mood stats
 async function loadMoodStats() {
     try {
         const data = await fetchAPI('/api/mood/stats?days=7');
@@ -153,6 +171,7 @@ async function loadMoodStats() {
             document.getElementById('avg-mood').textContent = stats.averageScore || '-';
             document.getElementById('total-entries').textContent = stats.totalEntries || '0';
             
+            // Find most common mood
             if (stats.moodDistribution) {
                 const entries = Object.entries(stats.moodDistribution);
                 if (entries.length > 0) {
@@ -166,10 +185,12 @@ async function loadMoodStats() {
     }
 }
 
+// Format mood name
 function formatMoodName(mood) {
     return mood.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
+// Initialize on page load
 if (window.location.pathname.includes('mood-tracker.html')) {
     initMoodTracker();
 }

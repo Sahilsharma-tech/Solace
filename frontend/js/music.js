@@ -1,10 +1,13 @@
+// Music therapy functionality
 
+// Initialize music page
 async function initMusic() {
     await checkAuth();
     loadUserPoints();
     loadCurrentMood();
 }
 
+// Load current mood and recommendations
 async function loadCurrentMood() {
     try {
         const data = await fetchAPI('/api/music/recommendations');
@@ -20,6 +23,7 @@ async function loadCurrentMood() {
     }
 }
 
+// Load music for specific mood
 async function loadMoodMusic(mood) {
     try {
         const data = await fetchAPI(`/api/music/recommendations/${mood}`);
@@ -29,6 +33,7 @@ async function loadMoodMusic(mood) {
             displayPlaylists(data.playlists);
             showNotification(`Showing playlists for ${formatMoodName(mood)}`, 'success');
             
+            // Award points for music exploration
             awardPoints('music_listen');
         }
     } catch (error) {
@@ -37,6 +42,7 @@ async function loadMoodMusic(mood) {
     }
 }
 
+// Display playlists
 function displayPlaylists(playlists) {
     const container = document.getElementById('playlist-container');
     
@@ -70,6 +76,7 @@ function displayPlaylists(playlists) {
     `).join('');
 }
 
+// Display fallback playlists
 function displayFallbackPlaylists() {
     const fallbackPlaylists = [
         {
@@ -113,10 +120,12 @@ function displayFallbackPlaylists() {
     displayPlaylists(fallbackPlaylists);
 }
 
+// Format mood name
 function formatMoodName(mood) {
     return mood.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
+// Initialize on page load
 if (window.location.pathname.includes('music.html')) {
     initMusic();
 }

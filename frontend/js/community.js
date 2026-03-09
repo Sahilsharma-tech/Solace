@@ -1,12 +1,15 @@
+// Community functionality
 let currentFilter = 'all';
 let currentPostId = null;
 
+// Initialize community page
 async function initCommunity() {
     await checkAuth();
     loadUserPoints();
     loadPosts();
 }
 
+// Load posts
 async function loadPosts(category = 'all') {
     try {
         const endpoint = category === 'all' 
@@ -24,6 +27,7 @@ async function loadPosts(category = 'all') {
     }
 }
 
+// Display posts
 function displayPosts(posts) {
     const container = document.getElementById('posts-container');
     
@@ -64,9 +68,11 @@ function displayPosts(posts) {
     `).join('');
 }
 
+// Filter posts
 function filterPosts(category) {
     currentFilter = category;
     
+    // Update active button
     document.querySelectorAll('.category-btn').forEach(btn => {
         btn.classList.remove('active', 'bg-purple-500', 'text-white');
         btn.classList.add('bg-gray-200', 'text-gray-700');
@@ -77,15 +83,18 @@ function filterPosts(category) {
     loadPosts(category);
 }
 
+// Show new post modal
 function showNewPostModal() {
     document.getElementById('new-post-modal').classList.remove('hidden');
 }
 
+// Close new post modal
 function closeNewPostModal() {
     document.getElementById('new-post-modal').classList.add('hidden');
     document.getElementById('new-post-form').reset();
 }
 
+// Handle new post submission
 document.getElementById('new-post-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -104,6 +113,7 @@ document.getElementById('new-post-form')?.addEventListener('submit', async (e) =
             closeNewPostModal();
             loadPosts(currentFilter);
             
+            // Award points
             awardPoints('community_post');
         }
     } catch (error) {
@@ -111,6 +121,7 @@ document.getElementById('new-post-form')?.addEventListener('submit', async (e) =
     }
 });
 
+// Open post detail
 async function openPostDetail(postId) {
     currentPostId = postId;
     
@@ -126,6 +137,7 @@ async function openPostDetail(postId) {
     }
 }
 
+// Display post detail
 function displayPostDetail(post) {
     document.getElementById('detail-title').textContent = post.title;
     document.getElementById('detail-author').textContent = post.anonymousName;
@@ -134,6 +146,7 @@ function displayPostDetail(post) {
     document.getElementById('like-count').textContent = post.likes;
     document.getElementById('comment-count').textContent = `${post.comments.length} Comments`;
     
+    // Display comments
     const commentsList = document.getElementById('comments-list');
     if (post.comments.length === 0) {
         commentsList.innerHTML = '<p class="text-gray-500 text-center py-4">No comments yet. Be the first to comment!</p>';
@@ -150,11 +163,13 @@ function displayPostDetail(post) {
     }
 }
 
+// Close post detail
 function closePostDetail() {
     document.getElementById('post-detail-modal').classList.add('hidden');
     currentPostId = null;
 }
 
+// Like post
 async function likePost() {
     if (!currentPostId) return;
     
@@ -173,6 +188,7 @@ async function likePost() {
     }
 }
 
+// Handle comment submission
 document.getElementById('comment-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -190,8 +206,10 @@ document.getElementById('comment-form')?.addEventListener('submit', async (e) =>
             showNotification('Comment added!', 'success');
             document.getElementById('comment-input').value = '';
             
+            // Reload post detail
             openPostDetail(currentPostId);
             
+            // Award points
             awardPoints('community_comment');
         }
     } catch (error) {
@@ -199,16 +217,19 @@ document.getElementById('comment-form')?.addEventListener('submit', async (e) =>
     }
 });
 
+// Escape HTML
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
+// Format mood name
 function formatMoodName(mood) {
     return mood.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
 }
 
+// Format date
 function formatDate(dateString) {
     const date = new Date(dateString);
     const now = new Date();
@@ -225,6 +246,7 @@ function formatDate(dateString) {
     return date.toLocaleDateString();
 }
 
+// Initialize on page load
 if (window.location.pathname.includes('community.html')) {
     initCommunity();
 }

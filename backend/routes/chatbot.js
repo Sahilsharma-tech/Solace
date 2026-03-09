@@ -7,6 +7,7 @@ const sentimentService = require('../services/sentimentService');
 const interventionService = require('../services/interventionService');
 const { v4: uuidv4 } = require('uuid');
 
+// Create new chat session
 router.post('/session', verifyToken, async (req, res) => {
   try {
     const sessionId = uuidv4();
@@ -29,6 +30,8 @@ router.post('/session', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to create chat session' });
   }
 });
+
+// Send message to chatbot
 router.post('/message', verifyToken, async (req, res) => {
   try {
     const { sessionId, message } = req.body;
@@ -37,6 +40,7 @@ router.post('/message', verifyToken, async (req, res) => {
       return res.status(400).json({ error: 'Message and session ID required' });
     }
 
+    // Get chat history
     let chatHistory = await ChatHistory.findOne({ 
       userId: req.userId, 
       sessionId 
@@ -50,11 +54,14 @@ router.post('/message', verifyToken, async (req, res) => {
       });
     }
 
+    // Analyze sentiment of user message
     const sentimentData = await sentimentService.detectStressIndicators(message);
 
-    const conversationHistory = chatHistory.messages.slice(-10);
+    // Get AI response
+    const conversationHistory = chatHistory.messages.slice(-10); // Last 10 messages
     const aiResponse = await geminiService.chat(message, conversationHistory);
 
+    // Add messages to history
     chatHistory.messages.push({
       role: 'user',
       content: message,
@@ -69,6 +76,7 @@ router.post('/message', verifyToken, async (req, res) => {
     chatHistory.updatedAt = new Date();
     await chatHistory.save();
 
+    // Check if intervention should be triggered
     let intervention = null;
     if (sentimentData.shouldTriggerIntervention) {
       intervention = interventionService.triggerIntervention(sentimentData);
@@ -85,6 +93,8 @@ router.post('/message', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to process message' });
   }
 });
+
+// Get chat history
 router.get('/history/:sessionId', verifyToken, async (req, res) => {
   try {
     const { sessionId } = req.params;
@@ -107,6 +117,8 @@ router.get('/history/:sessionId', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve chat history' });
   }
 });
+
+// Get all sessions for user
 router.get('/sessions', verifyToken, async (req, res) => {
   try {
     const sessions = await ChatHistory.find({ userId: req.userId })

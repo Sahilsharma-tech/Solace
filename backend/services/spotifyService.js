@@ -9,15 +9,18 @@ class MusicService {
   }
 
   async getMusicRecommendations(mood, sentimentScore) {
+    // Return fallback playlists if no API keys
     if (!this.hasAPIKey) {
       console.log('Using fallback music recommendations (no YouTube API key)');
       return this.getFallbackPlaylists(mood);
     }
 
     try {
+      // Get mood-appropriate search queries
       const queries = this.getMoodSearchQueries(mood);
       const allVideos = [];
 
+      // Search for videos matching each query
       for (const query of queries.slice(0, 2)) {
         try {
           const response = await axios.get(`${this.baseUrl}/search`, {
@@ -25,7 +28,7 @@ class MusicService {
               part: 'snippet',
               q: query,
               type: 'video',
-              videoCategoryId: '10',
+              videoCategoryId: '10', // Music category
               maxResults: 10,
               key: this.apiKey,
               order: 'relevance'
@@ -40,6 +43,7 @@ class MusicService {
         }
       }
 
+      // Format videos into playlists
       if (allVideos.length > 0) {
         const playlists = this.formatVideosToPlaylists(allVideos, mood);
         return playlists;
@@ -48,6 +52,7 @@ class MusicService {
       }
     } catch (error) {
       console.error('YouTube API Error:', error.message);
+      // Return fallback recommendations
       return this.getFallbackPlaylists(mood);
     }
   }
@@ -75,6 +80,9 @@ class MusicService {
     }
 
     const playlists = [];
+    const moodDescription = this.getMoodDescription(mood);
+
+    // Create main playlist
     const mainTracks = videos.slice(0, 10).map(video => ({
       name: video.snippet.title,
       artist: video.snippet.channelTitle,
@@ -92,6 +100,7 @@ class MusicService {
       url: mainTracks[0]?.url || '#'
     });
 
+    // Create second playlist if enough videos
     if (videos.length > 10) {
       const secondTracks = videos.slice(10, 20).map(video => ({
         name: video.snippet.title,

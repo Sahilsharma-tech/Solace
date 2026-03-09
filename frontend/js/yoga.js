@@ -1,3 +1,4 @@
+// Wellness & Yoga functionality
 let breathingInterval = null;
 let timerInterval = null;
 let breathingExercise = null;
@@ -5,11 +6,13 @@ let currentRound = 0;
 let totalRounds = 4;
 let isPaused = false;
 
+// Initialize wellness page
 async function initWellness() {
     await checkAuth();
     loadUserPoints();
 }
 
+// Start breathing exercise
 async function startBreathing(type) {
     currentRound = 0;
     isPaused = false;
@@ -43,9 +46,11 @@ async function startBreathing(type) {
     
     breathingExercise = exercises[type];
     
+    // Show breathing session
     document.getElementById('breathing-session').classList.remove('hidden');
     document.getElementById('exercise-name').textContent = breathingExercise.name;
     
+    // Start exercise
     runBreathingCycle();
 }
 
@@ -71,6 +76,7 @@ async function runBreathingCycle() {
     }
 }
 
+// Execute single phase
 function executePhase(phase) {
     return new Promise((resolve) => {
         const circle = document.getElementById('breathing-circle');
@@ -79,6 +85,7 @@ function executePhase(phase) {
         
         phaseEl.textContent = phase.name;
         
+        // Animate circle
         if (phase.scale > 1) {
             circle.style.transform = `scale(${phase.scale})`;
         } else {
@@ -106,6 +113,7 @@ function executePhase(phase) {
     });
 }
 
+// Pause breathing
 function pauseBreathing() {
     isPaused = !isPaused;
     const button = event.target;
@@ -118,6 +126,7 @@ function pauseBreathing() {
     }
 }
 
+// Stop breathing
 function stopBreathing() {
     isPaused = true;
     document.getElementById('breathing-session').classList.add('hidden');
@@ -129,6 +138,7 @@ function stopBreathing() {
     }
 }
 
+// Complete breathing exercise
 function completeBreathing() {
     showNotification('🎉 Breathing exercise complete! Well done!', 'success');
     awardPoints('breathing_exercise');
@@ -138,6 +148,7 @@ function completeBreathing() {
     }, 2000);
 }
 
+// Start meditation timer
 function startTimer(minutes) {
     document.getElementById('timer-modal').classList.remove('hidden');
     
@@ -163,6 +174,7 @@ function startTimer(minutes) {
     }, 1000);
 }
 
+// Pause timer
 function pauseTimer() {
     if (timerInterval) {
         clearInterval(timerInterval);
@@ -177,6 +189,7 @@ function pauseTimer() {
     }
 }
 
+// Stop timer
 function stopTimer() {
     if (timerInterval) {
         clearInterval(timerInterval);
@@ -185,10 +198,12 @@ function stopTimer() {
     document.getElementById('timer-modal').classList.add('hidden');
 }
 
+// Complete timer
 function completeTimer() {
     showNotification('🧘 Meditation complete! You did great!', 'success');
     awardPoints('yoga_session');
     
+    // Play completion sound (optional)
     const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwF');
     audio.play().catch(() => {});
     
@@ -197,6 +212,7 @@ function completeTimer() {
     }, 3000);
 }
 
+// Initialize on page load
 if (window.location.pathname.includes('yoga.html')) {
     initWellness();
 }

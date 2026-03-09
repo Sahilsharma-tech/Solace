@@ -5,10 +5,12 @@ const User = require('../models/User');
 const { verifyToken } = require('../middleware/auth');
 const config = require('../config');
 
+// Register new user
 router.post('/signup', async (req, res) => {
   try {
     const { email, password, displayName, age } = req.body;
 
+    // Validate input
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
@@ -17,11 +19,13 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ error: `Password must be at least ${config.user.password.minLength} characters` });
     }
 
+    // Check if user already exists
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({ error: 'User already exists with this email' });
     }
 
+    // Create new user
     const user = new User({
       email: email.toLowerCase(),
       password,
@@ -57,24 +61,30 @@ router.post('/signup', async (req, res) => {
     res.status(500).json({ error: 'Registration failed' });
   }
 });
+
+// Login existing user
 router.post('/login', async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Validate input
     if (!email || !password) {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
+    // Find user
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    // Check password
     const isValidPassword = await user.comparePassword(password);
     if (!isValidPassword) {
       return res.status(401).json({ error: 'Invalid email or password' });
     }
 
+    // Update last active
     user.lastActive = new Date();
     await user.save();
 
@@ -105,6 +115,8 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ error: 'Login failed' });
   }
 });
+
+// Get current user info
 router.get('/me', verifyToken, async (req, res) => {
   try {
     res.json({
