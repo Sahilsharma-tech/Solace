@@ -41,7 +41,6 @@ const moodSchema = new mongoose.Schema({
   }
 });
 
-// Index for efficient queries
 moodSchema.index({ userId: 1, createdAt: -1 });
 
 module.exports = mongoose.model('Mood', moodSchema);

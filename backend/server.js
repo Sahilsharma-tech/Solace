@@ -8,10 +8,8 @@ const path = require('path');
 const rateLimit = require('express-rate-limit');
 const config = require('./config');
 
-// Import config
 const connectDB = require('./config/database');
 
-// Import routes
 const authRoutes = require('./routes/auth');
 const chatbotRoutes = require('./routes/chatbot');
 const moodRoutes = require('./routes/mood');
@@ -21,14 +19,11 @@ const gamificationRoutes = require('./routes/gamification');
 
 const app = express();
 
-// Lazy database connection for serverless - connection is cached
 const ensureDBConnection = async () => {
-  // Check if mongoose is already connected
   if (mongoose.connection.readyState === 1) {
     return true;
   }
   
-  // If connecting, wait for it
   if (mongoose.connection.readyState === 2) {
     return new Promise((resolve) => {
       mongoose.connection.once('connected', () => resolve(true));
@@ -36,7 +31,6 @@ const ensureDBConnection = async () => {
     });
   }
   
-  // Otherwise, connect
   try {
     await connectDB();
     return true;
@@ -45,8 +39,6 @@ const ensureDBConnection = async () => {
     return false;
   }
 };
-
-// Middleware to ensure DB connection on each request
 app.use(async (req, res, next) => {
   const isConnected = await ensureDBConnection();
   if (!isConnected && req.path.startsWith('/api/') && req.path !== '/api/health') {
@@ -57,17 +49,13 @@ app.use(async (req, res, next) => {
   }
   next();
 });
-
-// Middleware
 app.use(helmet({
-  contentSecurityPolicy: false, // Disable for development
+  contentSecurityPolicy: false,
 }));
 app.use(cors());
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// Rate limiting
 const limiter = rateLimit({
   windowMs: config.rateLimit.windowMs,
   max: config.rateLimit.max,
@@ -77,19 +65,13 @@ const limiter = rateLimit({
 if (config.features.enableRateLimiting) {
   app.use('/api/', limiter);
 }
-
-// Serve static frontend files
 app.use(express.static(path.join(__dirname, '../frontend')));
-
-// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/mood', moodRoutes);
 app.use('/api/music', musicRoutes);
 app.use('/api/community', communityRoutes);
 app.use('/api/gamification', gamificationRoutes);
-
-// Health check (doesn't require DB)
 app.get('/api/health', (req, res) => {
   const dbState = mongoose.connection.readyState;
   const dbStatus = {
@@ -107,8 +89,6 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   });
 });
-
-// Environment variables check (for debugging Vercel deployment)
 app.get('/api/env-check', (req, res) => {
   const requiredVars = [
     'MONGODB_URI',
@@ -138,13 +118,9 @@ app.get('/api/env-check', (req, res) => {
     allSet: requiredVars.every(v => !!process.env[v])
   });
 });
-
-// Serve frontend for all other routes (SPA)
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
-
-// Error handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).json({ 
@@ -154,16 +130,13 @@ app.use((err, req, res, next) => {
 });
 
 const PORT = config.server.port;
-const HOST = '0.0.0.0'; // Listen on all network interfaces
-
-// Get local network IP address
+const HOST = '0.0.0.0';
 const getLocalIP = () => {
   const { networkInterfaces } = require('os');
   const nets = networkInterfaces();
   
   for (const name of Object.keys(nets)) {
     for (const net of nets[name]) {
-      // Skip internal and non-IPv4 addresses
       const familyV4Value = typeof net.family === 'string' ? 'IPv4' : 4;
       if (net.family === familyV4Value && !net.internal) {
         return net.address;
@@ -172,8 +145,6 @@ const getLocalIP = () => {
   }
   return 'localhost';
 };
-
-// Only start server if not in serverless environment
 if (process.env.VERCEL !== '1' && require.main === module) {
   app.listen(PORT, HOST, () => {
     const localIP = getLocalIP();

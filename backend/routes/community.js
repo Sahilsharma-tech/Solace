@@ -4,7 +4,6 @@ const { verifyToken } = require('../middleware/auth');
 const CommunityPost = require('../models/Community');
 const User = require('../models/User');
 
-// Get all community posts
 router.get('/posts', verifyToken, async (req, res) => {
   try {
     const { category, limit = 20, skip = 0 } = req.query;
@@ -18,7 +17,7 @@ router.get('/posts', verifyToken, async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(parseInt(limit))
       .skip(parseInt(skip))
-      .select('-userId'); // Don't expose user IDs
+      .select('-userId');
 
     res.json({
       success: true,
@@ -29,8 +28,6 @@ router.get('/posts', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve posts' });
   }
 });
-
-// Create new post
 router.post('/posts', verifyToken, async (req, res) => {
   try {
     const { title, content, category, tags } = req.body;
@@ -49,7 +46,6 @@ router.post('/posts', verifyToken, async (req, res) => {
 
     await post.save();
 
-    // Award points for community participation
     await User.findByIdAndUpdate(req.userId, {
       $inc: { 'gamification.points': 15 }
     });
@@ -71,8 +67,6 @@ router.post('/posts', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to create post' });
   }
 });
-
-// Like a post
 router.post('/posts/:postId/like', verifyToken, async (req, res) => {
   try {
     const { postId } = req.params;
@@ -82,15 +76,12 @@ router.post('/posts/:postId/like', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Post not found' });
     }
 
-    // Check if already liked
     const alreadyLiked = post.likedBy.includes(req.userId);
 
     if (alreadyLiked) {
-      // Unlike
       post.likes -= 1;
       post.likedBy = post.likedBy.filter(id => id.toString() !== req.userId.toString());
     } else {
-      // Like
       post.likes += 1;
       post.likedBy.push(req.userId);
     }
@@ -107,8 +98,6 @@ router.post('/posts/:postId/like', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to like post' });
   }
 });
-
-// Add comment to post
 router.post('/posts/:postId/comments', verifyToken, async (req, res) => {
   try {
     const { postId } = req.params;
@@ -123,7 +112,6 @@ router.post('/posts/:postId/comments', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'Post not found' });
     }
 
-    // Generate anonymous name for comment
     const adjectives = ['Brave', 'Strong', 'Peaceful', 'Gentle', 'Kind', 'Calm', 'Wise'];
     const nouns = ['Soul', 'Heart', 'Spirit', 'Mind', 'Friend', 'Warrior', 'Phoenix'];
     const anonymousName = `${adjectives[Math.floor(Math.random() * adjectives.length)]} ${nouns[Math.floor(Math.random() * nouns.length)]}`;
@@ -136,7 +124,6 @@ router.post('/posts/:postId/comments', verifyToken, async (req, res) => {
 
     await post.save();
 
-    // Award points
     await User.findByIdAndUpdate(req.userId, {
       $inc: { 'gamification.points': 5 }
     });
@@ -150,8 +137,6 @@ router.post('/posts/:postId/comments', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to add comment' });
   }
 });
-
-// Get single post with comments
 router.get('/posts/:postId', verifyToken, async (req, res) => {
   try {
     const { postId } = req.params;

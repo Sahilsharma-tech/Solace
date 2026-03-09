@@ -73,7 +73,6 @@ class InterventionService {
       description: intervention.description
     };
 
-    // Get random content based on type
     if (intervention.exercises) {
       result.content = intervention.exercises[Math.floor(Math.random() * intervention.exercises.length)];
     } else if (intervention.prompts) {
@@ -98,7 +97,6 @@ class InterventionService {
   }
 
   triggerIntervention(sentimentData) {
-    // Determine which intervention to trigger based on sentiment
     let interventionType;
 
     if (sentimentData.detectedKeywords.some(kw => ['anxious', 'anxiety', 'panic', 'nervous'].includes(kw))) {

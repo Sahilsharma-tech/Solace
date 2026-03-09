@@ -22,7 +22,6 @@ Remember: You're a supportive friend, not a therapist. Always prioritize user sa
   }
 
   async chat(userMessage, conversationHistory = []) {
-    // Fallback response if no API key
     if (!this.hasAPIKey || !this.vertexAI) {
       return this.getFallbackResponse(userMessage);
     }
@@ -37,10 +36,7 @@ Remember: You're a supportive friend, not a therapist. Always prioritize user sa
         },
       });
 
-      // Build conversation context
       const context = this.systemPrompt + '\n\n';
-      
-      // Format conversation history
       let historyText = '';
       for (const msg of conversationHistory) {
         historyText += `${msg.role === 'user' ? 'User' : 'Solace'}: ${msg.content}\n`;
@@ -65,7 +61,6 @@ Remember: You're a supportive friend, not a therapist. Always prioritize user sa
   getFallbackResponse(userMessage) {
     const lowerMessage = userMessage.toLowerCase();
     
-    // Simple keyword-based responses
     if (lowerMessage.includes('stress') || lowerMessage.includes('stressed')) {
       return "I understand you're feeling stressed. Try taking a few deep breaths - breathe in for 4 counts, hold for 7, and exhale for 8. This can help calm your nervous system. Remember, it's okay to take breaks when you need them. 💙";
     }
@@ -85,12 +80,10 @@ Remember: You're a supportive friend, not a therapist. Always prioritize user sa
       return "Hello! I'm Solace, your mental wellness companion. I'm here to listen and support you. How are you feeling today? Feel free to share what's on your mind. 🌻";
     }
     
-    // Default supportive response
     return "Thank you for sharing that with me. I'm here to support you. While I'm currently running in offline mode, I want you to know that your feelings are valid. Remember: it's okay to not be okay sometimes. Have you tried our breathing exercises or mood tracker? They might help. If you're in crisis, please reach out to a trusted adult or call a helpline. 💙";
   }
 
   async getWellnessSuggestion(moodData) {
-    // Fallback if no API key
     if (!this.hasAPIKey || !this.vertexAI) {
       return this.getFallbackSuggestion(moodData.mood);
     }

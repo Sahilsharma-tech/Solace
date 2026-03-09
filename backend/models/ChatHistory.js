@@ -45,7 +45,6 @@ const chatHistorySchema = new mongoose.Schema({
   }
 });
 
-// Index for efficient queries
 chatHistorySchema.index({ userId: 1, sessionId: 1 });
 chatHistorySchema.index({ createdAt: -1 });
 

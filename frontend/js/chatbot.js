@@ -1,15 +1,12 @@
-// Chatbot functionality
 let currentSessionId = null;
 let isTyping = false;
 
-// Initialize chatbot
 async function initChatbot() {
     await checkAuth();
     await createNewSession();
     loadUserPoints();
 }
 
-// Create new chat session
 async function createNewSession() {
     try {
         const data = await fetchAPI('/api/chatbot/session', {
@@ -26,14 +23,12 @@ async function createNewSession() {
     }
 }
 
-// Start new chat
 async function startNewChat() {
     if (confirm('Start a new chat? Your current conversation will be saved.')) {
         await createNewSession();
     }
 }
 
-// Clear chat UI
 function clearChat() {
     const chatMessages = document.getElementById('chat-messages');
     chatMessages.innerHTML = `
@@ -47,7 +42,6 @@ function clearChat() {
     `;
 }
 
-// Handle chat form submission
 document.getElementById('chat-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -56,13 +50,9 @@ document.getElementById('chat-form')?.addEventListener('submit', async (e) => {
     
     if (!message || isTyping) return;
     
-    // Clear input
     input.value = '';
-    
-    // Add user message to chat
     addMessageToChat('user', message);
     
-    // Show typing indicator
     showTypingIndicator();
     isTyping = true;
     
@@ -75,20 +65,16 @@ document.getElementById('chat-form')?.addEventListener('submit', async (e) => {
             })
         });
         
-        // Remove typing indicator
         removeTypingIndicator();
         isTyping = false;
         
         if (data.success) {
-            // Add AI response
             addMessageToChat('assistant', data.response);
             
-            // Show intervention if triggered
             if (data.intervention) {
                 showIntervention(data.intervention);
             }
 
-            // Award points for chat activity
             awardPoints('chat_session');
         }
     } catch (error) {
@@ -98,11 +84,9 @@ document.getElementById('chat-form')?.addEventListener('submit', async (e) => {
     }
 });
 
-// Add message to chat
 function addMessageToChat(role, content) {
     const chatMessages = document.getElementById('chat-messages');
     
-    // Remove placeholder if exists
     if (chatMessages.querySelector('.text-gray-400')) {
         chatMessages.innerHTML = '';
     }
@@ -133,7 +117,6 @@ function addMessageToChat(role, content) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Show typing indicator
 function showTypingIndicator() {
     const chatMessages = document.getElementById('chat-messages');
     const typingDiv = document.createElement('div');
@@ -151,12 +134,10 @@ function showTypingIndicator() {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
 
-// Remove typing indicator
 function removeTypingIndicator() {
     document.getElementById('typing-indicator')?.remove();
 }
 
-// Show intervention
 function showIntervention(intervention) {
     const alert = document.getElementById('intervention-alert');
     const title = document.getElementById('intervention-title');
@@ -174,25 +155,21 @@ function showIntervention(intervention) {
     
     alert.classList.remove('hidden');
     
-    // Auto-hide after 30 seconds
     setTimeout(() => {
         alert.classList.add('hidden');
     }, 30000);
 }
 
-// Close intervention
 function closeIntervention() {
     document.getElementById('intervention-alert').classList.add('hidden');
 }
 
-// Escape HTML to prevent XSS
 function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
 }
 
-// Initialize on page load
 if (window.location.pathname.includes('chatbot.html')) {
     initChatbot();
 }

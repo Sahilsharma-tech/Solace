@@ -8,7 +8,6 @@ const geminiService = require('../services/geminiService');
 const interventionService = require('../services/interventionService');
 const config = require('../config');
 
-// Log mood entry
 router.post('/log', verifyToken, async (req, res) => {
   try {
     const { mood, moodScore, notes, activities, triggers } = req.body;
@@ -17,7 +16,6 @@ router.post('/log', verifyToken, async (req, res) => {
       return res.status(400).json({ error: 'Mood and mood score required' });
     }
 
-    // Analyze sentiment if notes provided
     let sentimentAnalysis = null;
     let intervention = null;
     
@@ -25,13 +23,11 @@ router.post('/log', verifyToken, async (req, res) => {
       const sentimentData = await sentimentService.detectStressIndicators(notes);
       sentimentAnalysis = sentimentData.sentimentAnalysis;
 
-      // Trigger intervention if needed
       if (sentimentData.shouldTriggerIntervention) {
         intervention = interventionService.triggerIntervention(sentimentData);
       }
     }
 
-    // Create mood entry
     const moodEntry = new Mood({
       userId: req.userId,
       mood,
@@ -45,10 +41,8 @@ router.post('/log', verifyToken, async (req, res) => {
 
     await moodEntry.save();
 
-    // Update user streak
     await updateUserStreak(req.userId);
 
-    // Get AI wellness suggestion
     const suggestion = await geminiService.getWellnessSuggestion({
       mood,
       moodScore,
@@ -67,8 +61,6 @@ router.post('/log', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to log mood' });
   }
 });
-
-// Get mood history
 router.get('/history', verifyToken, async (req, res) => {
   try {
     const { days = 30 } = req.query;
@@ -89,8 +81,6 @@ router.get('/history', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve mood history' });
   }
 });
-
-// Get mood statistics
 router.get('/stats', verifyToken, async (req, res) => {
   try {
     const { days = 30 } = req.query;
@@ -102,7 +92,6 @@ router.get('/stats', verifyToken, async (req, res) => {
       createdAt: { $gte: dateLimit }
     });
 
-    // Calculate statistics
     const stats = {
       totalEntries: moods.length,
       averageScore: 0,
@@ -112,16 +101,13 @@ router.get('/stats', verifyToken, async (req, res) => {
     };
 
     if (moods.length > 0) {
-      // Average mood score
       const totalScore = moods.reduce((sum, m) => sum + m.moodScore, 0);
       stats.averageScore = (totalScore / moods.length).toFixed(1);
 
-      // Mood distribution
       moods.forEach(m => {
         stats.moodDistribution[m.mood] = (stats.moodDistribution[m.mood] || 0) + 1;
       });
 
-      // Common activities
       moods.forEach(m => {
         if (m.activities) {
           m.activities.forEach(activity => {
@@ -130,7 +116,6 @@ router.get('/stats', verifyToken, async (req, res) => {
         }
       });
 
-      // Sentiment trend (weekly)
       const weeks = Math.ceil(days / 7);
       for (let i = 0; i < weeks; i++) {
         const weekStart = new Date(dateLimit);
@@ -162,8 +147,6 @@ router.get('/stats', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve mood statistics' });
   }
 });
-
-// Helper function to update user streak
 async function updateUserStreak(userId) {
   try {
     const user = await User.findById(userId);
@@ -173,32 +156,26 @@ async function updateUserStreak(userId) {
     const lastActivity = user.gamification.streak.lastActivity;
 
     if (!lastActivity) {
-      // First activity
       user.gamification.streak.current = 1;
       user.gamification.streak.lastActivity = now;
     } else {
       const hoursSinceLastActivity = (now - lastActivity) / (1000 * 60 * 60);
 
       if (hoursSinceLastActivity < 24) {
-        // Same day, no change
         return;
       } else if (hoursSinceLastActivity < 48) {
-        // Next day, increment streak
         user.gamification.streak.current += 1;
         user.gamification.streak.lastActivity = now;
 
-        // Update longest streak
         if (user.gamification.streak.current > user.gamification.streak.longest) {
           user.gamification.streak.longest = user.gamification.streak.current;
         }
       } else {
-        // Streak broken
         user.gamification.streak.current = 1;
         user.gamification.streak.lastActivity = now;
       }
     }
 
-    // Award points
     user.gamification.points += config.gamification.activities.mood_log;
 
     await user.save();

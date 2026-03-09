@@ -4,7 +4,6 @@ const { verifyToken } = require('../middleware/auth');
 const User = require('../models/User');
 const config = require('../config');
 
-// Get user gamification stats
 router.get('/stats', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.userId).select('gamification');
@@ -22,8 +21,6 @@ router.get('/stats', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve gamification stats' });
   }
 });
-
-// Award badge
 router.post('/badge', verifyToken, async (req, res) => {
   try {
     const { badgeName } = req.body;
@@ -49,13 +46,11 @@ router.post('/badge', verifyToken, async (req, res) => {
       return res.status(404).json({ error: 'User not found' });
     }
 
-    // Check if badge already earned
     const hasBadge = user.gamification.badges.some(b => b.name === badge.name);
     if (hasBadge) {
       return res.json({ success: true, message: 'Badge already earned' });
     }
 
-    // Award badge
     user.gamification.badges.push({
       name: badge.name,
       description: badge.description,
@@ -63,7 +58,6 @@ router.post('/badge', verifyToken, async (req, res) => {
       earnedAt: new Date()
     });
 
-    // Award bonus points
     user.gamification.points += config.gamification.badgeBonus;
 
     await user.save();
@@ -78,8 +72,6 @@ router.post('/badge', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to award badge' });
   }
 });
-
-// Get leaderboard
 router.get('/leaderboard', verifyToken, async (req, res) => {
   try {
     const topUsers = await User.find()
@@ -104,8 +96,6 @@ router.get('/leaderboard', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to retrieve leaderboard' });
   }
 });
-
-// Complete activity (awards points)
 router.post('/activity', verifyToken, async (req, res) => {
   try {
     const { activityType, points } = req.body;
@@ -121,7 +111,6 @@ router.post('/activity', verifyToken, async (req, res) => {
 
     user.gamification.points += pointsToAward;
 
-    // Level up logic (100 points per level)
     const newLevel = Math.floor(user.gamification.points / 100) + 1;
     const leveledUp = newLevel > user.gamification.level;
     user.gamification.level = newLevel;

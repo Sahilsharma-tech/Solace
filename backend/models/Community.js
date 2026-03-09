@@ -76,7 +76,6 @@ const communityPostSchema = new mongoose.Schema({
   }
 });
 
-// Index for efficient queries
 communityPostSchema.index({ createdAt: -1 });
 communityPostSchema.index({ category: 1, createdAt: -1 });
 communityPostSchema.index({ likes: -1 });

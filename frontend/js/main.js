@@ -1,11 +1,7 @@
-// Global variables
 let authToken = localStorage.getItem('authToken');
 let currentUser = JSON.parse(localStorage.getItem('currentUser') || 'null');
 
-// API Base URL
 const API_BASE = window.location.origin;
-
-// Helper: Fetch API with authentication
 async function fetchAPI(endpoint, options = {}) {
     const defaultOptions = {
         headers: {
@@ -38,11 +34,8 @@ async function fetchAPI(endpoint, options = {}) {
     }
 }
 
-// Check Authentication
 async function checkAuth() {
     if (authToken && currentUser) {
-        // User is signed in
-        // Update UI if on non-auth pages
         const authButtons = document.getElementById('auth-buttons');
         if (authButtons) {
             authButtons.innerHTML = `
@@ -52,11 +45,9 @@ async function checkAuth() {
             `;
         }
 
-        // Load points if element exists
         loadUserPoints();
         return currentUser;
     } else {
-        // User is signed out
         if (window.location.pathname.includes('/pages/')) {
             window.location.href = '/index.html';
         }
@@ -64,13 +55,10 @@ async function checkAuth() {
     }
 }
 
-// Authenticate with backend (for backward compatibility)
 async function authenticateWithBackend(user) {
-    // No longer needed, but kept for compatibility
     return user;
 }
 
-// Load user points
 async function loadUserPoints() {
     const pointsElement = document.getElementById('points-count');
     if (!pointsElement) return;
@@ -85,7 +73,6 @@ async function loadUserPoints() {
     }
 }
 
-// Login
 document.getElementById('login-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -121,7 +108,6 @@ document.getElementById('login-form')?.addEventListener('submit', async (e) => {
     }
 });
 
-// Signup
 document.getElementById('signup-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -159,7 +145,6 @@ document.getElementById('signup-form')?.addEventListener('submit', async (e) => 
     }
 });
 
-// Logout
 async function logout() {
     try {
         localStorage.removeItem('authToken');
@@ -173,7 +158,6 @@ async function logout() {
     }
 }
 
-// Modal Functions
 function showLoginModal() {
     closeModal('signup-modal');
     document.getElementById('login-modal').classList.remove('hidden');
@@ -188,12 +172,10 @@ function closeModal(modalId) {
     document.getElementById(modalId)?.classList.add('hidden');
 }
 
-// Scroll to features
 function scrollToFeatures() {
     document.getElementById('features-preview')?.scrollIntoView({ behavior: 'smooth' });
 }
 
-// Notification System
 function showNotification(message, type = 'info') {
     const notification = document.createElement('div');
     notification.className = `fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-2xl transform transition-all duration-300 ${
@@ -209,7 +191,6 @@ function showNotification(message, type = 'info') {
     setTimeout(() => notification.remove(), 3500);
 }
 
-// Award points for activity
 async function awardPoints(activityType) {
     try {
         const data = await fetchAPI('/api/gamification/activity', {
@@ -227,7 +208,6 @@ async function awardPoints(activityType) {
     }
 }
 
-// Format date
 function formatDate(dateString) {
     const date = new Date(dateString);
     const now = new Date();
@@ -244,7 +224,6 @@ function formatDate(dateString) {
     return date.toLocaleDateString();
 }
 
-// Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     checkAuth();
 });

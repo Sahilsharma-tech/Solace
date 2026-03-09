@@ -17,7 +17,6 @@ class SentimentService {
         };
       }
 
-      // Fallback to basic sentiment if no API key
       if (!this.hasAPIKey || !this.client) {
         return this.getBasicSentiment(text);
       }
@@ -30,7 +29,6 @@ class SentimentService {
       const [result] = await this.client.analyzeSentiment({ document });
       const sentiment = result.documentSentiment;
 
-      // Classify sentiment
       let sentimentLabel;
       if (sentiment.score >= 0.25) {
         sentimentLabel = 'positive';
@@ -54,9 +52,7 @@ class SentimentService {
   getBasicSentiment(text) {
     const lowerText = text.toLowerCase();
     
-    // Positive keywords
     const positiveWords = ['happy', 'great', 'amazing', 'wonderful', 'good', 'excellent', 'love', 'joy', 'excited', 'better', 'calm', 'peaceful', 'grateful', 'thankful'];
-    // Negative keywords
     const negativeWords = ['sad', 'bad', 'terrible', 'awful', 'hate', 'angry', 'anxious', 'stressed', 'worried', 'depressed', 'tired', 'exhausted', 'scared', 'afraid', 'hopeless'];
     
     let positiveCount = 0;
@@ -103,7 +99,6 @@ class SentimentService {
 
       const sentiment = await this.analyzeSentiment(text);
       
-      // Determine if intervention should be triggered
       const shouldTriggerIntervention = 
         (sentiment.score <= -0.3 && sentiment.magnitude >= 0.5) ||
         detectedKeywords.length >= 2;

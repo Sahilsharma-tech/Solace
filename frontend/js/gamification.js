@@ -1,32 +1,25 @@
-// Gamification & Profile functionality
 
-// Initialize profile page
 async function initProfile() {
     await checkAuth();
     loadUserProfile();
     loadLeaderboard();
 }
 
-// Load user profile
 async function loadUserProfile() {
     try {
-        // Load gamification stats
         const gamificationData = await fetchAPI('/api/gamification/stats');
         
         if (gamificationData.success) {
             const { gamification } = gamificationData;
             
-            // Update profile stats
             document.getElementById('profile-level').textContent = gamification.level;
             document.getElementById('profile-points').textContent = gamification.points;
             document.getElementById('profile-streak').textContent = gamification.streak.current;
             document.getElementById('points-count').textContent = gamification.points;
             
-            // Update streak info
             document.getElementById('current-streak').textContent = `${gamification.streak.current} days`;
             document.getElementById('longest-streak').textContent = `${gamification.streak.longest} days`;
             
-            // Update level progress
             const currentLevelPoints = (gamification.level - 1) * 100;
             const progressInLevel = gamification.points - currentLevelPoints;
             const progressPercent = (progressInLevel / 100) * 100;
@@ -35,11 +28,9 @@ async function loadUserProfile() {
             document.getElementById('next-level').textContent = gamification.level + 1;
             document.getElementById('points-to-next').textContent = `${progressInLevel} / 100 points`;
             
-            // Display badges
             displayBadges(gamification.badges);
         }
         
-        // Load user info
         if (currentUser) {
             document.getElementById('profile-name').textContent = currentUser.displayName || 'User';
             document.getElementById('profile-email').textContent = currentUser.email || '';
@@ -51,7 +42,6 @@ async function loadUserProfile() {
             document.getElementById('member-since').textContent = memberSince;
         }
         
-        // Load activity stats (mock for now - you can implement API endpoints for these)
         loadActivityStats();
         
     } catch (error) {
@@ -59,7 +49,6 @@ async function loadUserProfile() {
     }
 }
 
-// Display badges
 function displayBadges(badges) {
     const container = document.getElementById('badges-container');
     
@@ -74,7 +63,6 @@ function displayBadges(badges) {
         return;
     }
     
-    // Get all possible badges
     const allBadges = [
         { key: 'first_chat', name: 'First Chat', description: 'Started wellness journey', icon: '💬', locked: true },
         { key: 'mood_tracker', name: 'Mood Tracker', description: 'Logged first mood', icon: '😊', locked: true },
@@ -86,7 +74,6 @@ function displayBadges(badges) {
         { key: 'consistent', name: 'Consistent', description: '30-day streak', icon: '⭐', locked: true }
     ];
     
-    // Mark earned badges
     badges.forEach(earned => {
         const badge = allBadges.find(b => b.name === earned.name);
         if (badge) {
@@ -117,17 +104,13 @@ function displayBadges(badges) {
     }).join('');
 }
 
-// Load activity stats (mock implementation)
 async function loadActivityStats() {
-    // In a real implementation, you'd fetch these from API endpoints
-    // For now, using mock data
     document.getElementById('chat-count').textContent = Math.floor(Math.random() * 20);
     document.getElementById('mood-count').textContent = Math.floor(Math.random() * 30);
     document.getElementById('post-count').textContent = Math.floor(Math.random() * 10);
     document.getElementById('wellness-count').textContent = Math.floor(Math.random() * 15);
 }
 
-// Load leaderboard
 async function loadLeaderboard() {
     try {
         const data = await fetchAPI('/api/gamification/leaderboard');
@@ -140,7 +123,6 @@ async function loadLeaderboard() {
     }
 }
 
-// Display leaderboard
 function displayLeaderboard(leaderboard) {
     const container = document.getElementById('leaderboard-container');
     
@@ -184,7 +166,7 @@ function displayLeaderboard(leaderboard) {
     }).join('');
 }
 
-// Format date
+
 function formatDate(dateString) {
     const date = new Date(dateString);
     const now = new Date();
@@ -199,7 +181,6 @@ function formatDate(dateString) {
     return date.toLocaleDateString();
 }
 
-// Initialize on page load
 if (window.location.pathname.includes('profile.html')) {
     initProfile();
 }
