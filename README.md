@@ -6,7 +6,7 @@ A mental wellness platform built for young people who need someone to talk to. S
 
 ## What is this?
 
-Solace is basically a mental health companion that uses AI to help you track your moods, chat when you need to vent, find calming music, and connect with others going through similar stuff. Built this during a hackathon and honestly pretty proud of how it turned out.
+Solace is basically a mental health companion that uses AI to help you track your moods, chat when you need to vent, find calming music, and connect with others going through similar stuff.
 
 ## Features that actually work
 
