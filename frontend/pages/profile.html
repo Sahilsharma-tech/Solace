@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Solace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#EC4899',
+                        accent: '#06B6D4',
+                        dark: '#1E1B4B',
+                        light: '#F3E8FF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-lg shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">S</span>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Solace</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-6">
+                    <a href="/pages/dashboard.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/pages/chatbot.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-comments mr-2"></i>Chat
+                    </a>
+                    <a href="/pages/mood-tracker.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-smile mr-2"></i>Mood
+                    </a>
+                    <a href="/pages/yoga.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-spa mr-2"></i>Wellness
+                    </a>
+                    <a href="/pages/music.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-music mr-2"></i>Music
+                    </a>
+                    <a href="/pages/community.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-users mr-2"></i>Community
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-full font-bold">
+                        <i class="fas fa-star mr-1"></i><span id="points-count">0</span>
+                    </div>
+                    <button onclick="logout()" class="text-gray-600 hover:text-red-600 transition">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Profile Header -->
+        <div class="bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 rounded-3xl p-8 text-white mb-8 shadow-xl">
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
+                <div class="w-24 h-24 bg-white/20 backdrop-blur-lg rounded-full flex items-center justify-center text-5xl">
+                    👤
+                </div>
+                <div class="text-center md:text-left flex-1">
+                    <h1 id="profile-name" class="text-4xl font-bold mb-2">Loading...</h1>
+                    <p id="profile-email" class="text-xl opacity-90">user@example.com</p>
+                    <p class="mt-2 text-sm opacity-80">Member since <span id="member-since"></span></p>
+                </div>
+                <div class="grid grid-cols-3 gap-6 text-center">
+                    <div class="bg-white/20 backdrop-blur-lg rounded-xl p-4">
+                        <div id="profile-level" class="text-3xl font-bold">1</div>
+                        <div class="text-sm">Level</div>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-lg rounded-xl p-4">
+                        <div id="profile-points" class="text-3xl font-bold">0</div>
+                        <div class="text-sm">Points</div>
+                    </div>
+                    <div class="bg-white/20 backdrop-blur-lg rounded-xl p-4">
+                        <div id="profile-streak" class="text-3xl font-bold">0</div>
+                        <div class="text-sm">Day Streak</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Badges & Achievements -->
+        <div class="bg-white rounded-3xl p-8 mb-8 shadow-lg">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">🏆 Your Badges & Achievements</h2>
+            <div id="badges-container" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="text-center p-6 bg-gray-100 rounded-2xl">
+                    <div class="text-5xl mb-3">🔒</div>
+                    <p class="font-semibold text-gray-500">Locked</p>
+                    <p class="text-sm text-gray-400">Keep going!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Statistics -->
+        <div class="grid md:grid-cols-3 gap-6 mb-8">
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Activity Stats</h3>
+                    <i class="fas fa-chart-line text-3xl text-purple-500"></i>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Chat Sessions</span>
+                        <span id="chat-count" class="font-bold text-purple-600">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Mood Logs</span>
+                        <span id="mood-count" class="font-bold text-pink-600">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Community Posts</span>
+                        <span id="post-count" class="font-bold text-cyan-600">0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Wellness Sessions</span>
+                        <span id="wellness-count" class="font-bold text-teal-600">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Streak History</h3>
+                    <i class="fas fa-fire text-3xl text-orange-500"></i>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Current Streak</span>
+                        <span id="current-streak" class="font-bold text-orange-600">0 days</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Longest Streak</span>
+                        <span id="longest-streak" class="font-bold text-orange-600">0 days</span>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <p class="text-sm text-gray-500 mb-2">Keep it going!</p>
+                        <div class="flex justify-center space-x-2">
+                            <div class="w-8 h-8 bg-green-500 rounded-lg"></div>
+                            <div class="w-8 h-8 bg-green-500 rounded-lg"></div>
+                            <div class="w-8 h-8 bg-green-500 rounded-lg"></div>
+                            <div class="w-8 h-8 bg-gray-200 rounded-lg"></div>
+                            <div class="w-8 h-8 bg-gray-200 rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-lg">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-xl font-bold text-gray-800">Next Level</h3>
+                    <i class="fas fa-trophy text-3xl text-yellow-500"></i>
+                </div>
+                <div class="space-y-3">
+                    <div class="flex justify-between mb-2">
+                        <span class="text-gray-600">Progress to Level <span id="next-level">2</span></span>
+                    </div>
+                    <div class="w-full bg-gray-200 rounded-full h-4">
+                        <div id="level-progress-bar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-4 rounded-full transition-all" style="width: 0%"></div>
+                    </div>
+                    <div class="text-center">
+                        <p id="points-to-next" class="text-sm text-gray-600">0 / 100 points</p>
+                    </div>
+                    <div class="mt-4 p-3 bg-gradient-to-r from-purple-100 to-pink-100 rounded-xl text-center">
+                        <p class="text-sm font-semibold text-purple-700">Keep earning points to level up!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="bg-white rounded-3xl p-8 shadow-lg">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6">🌟 Community Leaderboard</h2>
+            <div id="leaderboard-container" class="space-y-3">
+                <div class="animate-pulse bg-gray-200 rounded-xl h-16"></div>
+                <div class="animate-pulse bg-gray-200 rounded-xl h-16"></div>
+                <div class="animate-pulse bg-gray-200 rounded-xl h-16"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/gamification.js"></script>
+</body>
+</html>

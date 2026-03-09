@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Therapy - Solace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#EC4899',
+                        accent: '#06B6D4',
+                        dark: '#1E1B4B',
+                        light: '#F3E8FF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-lg shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">S</span>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Solace</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-6">
+                    <a href="/pages/dashboard.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/pages/chatbot.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-comments mr-2"></i>Chat
+                    </a>
+                    <a href="/pages/mood-tracker.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-smile mr-2"></i>Mood
+                    </a>
+                    <a href="/pages/yoga.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-spa mr-2"></i>Wellness
+                    </a>
+                    <a href="/pages/music.html" class="text-purple-600 hover:text-purple-700 font-semibold transition">
+                        <i class="fas fa-music mr-2"></i>Music
+                    </a>
+                    <a href="/pages/community.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-users mr-2"></i>Community
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-full font-bold">
+                        <i class="fas fa-star mr-1"></i><span id="points-count">0</span>
+                    </div>
+                    <button onclick="logout()" class="text-gray-600 hover:text-red-600 transition">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-8 text-white mb-8 shadow-xl">
+            <h1 class="text-4xl font-bold mb-2">Music Therapy 🎵</h1>
+            <p class="text-xl opacity-90">Let music heal your mind and soul</p>
+        </div>
+
+        <!-- Current Mood -->
+        <div class="bg-white rounded-3xl p-6 mb-8 shadow-lg">
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-gray-600 mb-1">Music recommendations based on your current mood</p>
+                    <p class="text-2xl font-bold text-purple-600">Current Mood: <span id="current-mood">Loading...</span></p>
+                </div>
+                <button onclick="window.location.href='/pages/mood-tracker.html'" class="px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:shadow-lg transition font-semibold">
+                    Update Mood
+                </button>
+            </div>
+        </div>
+
+        <!-- Mood-Based Playlists -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Playlists For You</h2>
+            <div id="playlist-container" class="grid md:grid-cols-3 gap-6">
+                <div class="animate-pulse bg-gray-200 rounded-2xl h-64"></div>
+                <div class="animate-pulse bg-gray-200 rounded-2xl h-64"></div>
+                <div class="animate-pulse bg-gray-200 rounded-2xl h-64"></div>
+            </div>
+        </div>
+
+        <!-- Mood Selector -->
+        <div class="bg-white rounded-3xl p-8 mb-8 shadow-lg">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Explore by Mood</h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <button onclick="loadMoodMusic('calm')" class="p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 hover:shadow-lg transition transform hover:scale-105">
+                    <div class="text-5xl mb-2">😌</div>
+                    <p class="font-semibold text-gray-700">Calm</p>
+                </button>
+                <button onclick="loadMoodMusic('happy')" class="p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 hover:shadow-lg transition transform hover:scale-105">
+                    <div class="text-5xl mb-2">😊</div>
+                    <p class="font-semibold text-gray-700">Happy</p>
+                </button>
+                <button onclick="loadMoodMusic('energetic')" class="p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 hover:shadow-lg transition transform hover:scale-105">
+                    <div class="text-5xl mb-2">🤩</div>
+                    <p class="font-semibold text-gray-700">Energetic</p>
+                </button>
+                <button onclick="loadMoodMusic('sad')" class="p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 hover:shadow-lg transition transform hover:scale-105">
+                    <div class="text-5xl mb-2">😔</div>
+                    <p class="font-semibold text-gray-700">Comforting</p>
+                </button>
+                <button onclick="loadMoodMusic('anxious')" class="p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 hover:shadow-lg transition transform hover:scale-105">
+                    <div class="text-5xl mb-2">😰</div>
+                    <p class="font-semibold text-gray-700">Soothing</p>
+                </button>
+            </div>
+        </div>
+
+        <!-- Music Benefits -->
+        <div class="bg-gradient-to-r from-purple-400 to-pink-400 rounded-3xl p-8 text-white shadow-lg">
+            <h2 class="text-2xl font-bold mb-6">🎵 How Music Helps Your Mental Health</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="bg-white/20 backdrop-blur-lg rounded-2xl p-6">
+                    <div class="text-4xl mb-3">🧠</div>
+                    <h3 class="text-xl font-bold mb-2">Reduces Stress</h3>
+                    <p class="text-sm">Music lowers cortisol levels and promotes relaxation</p>
+                </div>
+                <div class="bg-white/20 backdrop-blur-lg rounded-2xl p-6">
+                    <div class="text-4xl mb-3">😊</div>
+                    <h3 class="text-xl font-bold mb-2">Boosts Mood</h3>
+                    <p class="text-sm">Releases dopamine, the "feel-good" neurotransmitter</p>
+                </div>
+                <div class="bg-white/20 backdrop-blur-lg rounded-2xl p-6">
+                    <div class="text-4xl mb-3">💪</div>
+                    <h3 class="text-xl font-bold mb-2">Improves Focus</h3>
+                    <p class="text-sm">Certain rhythms enhance concentration and productivity</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/music.js"></script>
+</body>
+</html>

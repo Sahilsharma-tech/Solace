@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - Solace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#EC4899',
+                        accent: '#06B6D4',
+                        dark: '#1E1B4B',
+                        light: '#F3E8FF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-lg shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">S</span>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Solace</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-6">
+                    <a href="/pages/dashboard.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/pages/chatbot.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-comments mr-2"></i>Chat
+                    </a>
+                    <a href="/pages/mood-tracker.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-smile mr-2"></i>Mood
+                    </a>
+                    <a href="/pages/yoga.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-spa mr-2"></i>Wellness
+                    </a>
+                    <a href="/pages/music.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-music mr-2"></i>Music
+                    </a>
+                    <a href="/pages/community.html" class="text-purple-600 hover:text-purple-700 font-semibold transition">
+                        <i class="fas fa-users mr-2"></i>Community
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-full font-bold">
+                        <i class="fas fa-star mr-1"></i><span id="points-count">0</span>
+                    </div>
+                    <button onclick="logout()" class="text-gray-600 hover:text-red-600 transition">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-teal-500 to-cyan-500 rounded-3xl p-8 text-white mb-8 shadow-xl">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div>
+                    <h1 class="text-4xl font-bold mb-2">Community Support 👥</h1>
+                    <p class="text-xl opacity-90">Share, connect, and support each other anonymously</p>
+                </div>
+                <button onclick="showNewPostModal()" class="mt-4 md:mt-0 px-8 py-4 bg-white text-teal-600 rounded-xl hover:shadow-xl transition transform hover:scale-105 font-bold">
+                    <i class="fas fa-plus mr-2"></i>New Post
+                </button>
+            </div>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="bg-white rounded-2xl p-6 mb-8 shadow-lg">
+            <div class="flex flex-wrap gap-3">
+                <button onclick="filterPosts('all')" class="category-btn active px-6 py-2 rounded-full bg-purple-500 text-white font-semibold hover:shadow-lg transition">
+                    All Posts
+                </button>
+                <button onclick="filterPosts('anxiety')" class="category-btn px-6 py-2 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-purple-500 hover:text-white transition">
+                    Anxiety
+                </button>
+                <button onclick="filterPosts('depression')" class="category-btn px-6 py-2 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-purple-500 hover:text-white transition">
+                    Depression
+                </button>
+                <button onclick="filterPosts('stress')" class="category-btn px-6 py-2 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-purple-500 hover:text-white transition">
+                    Stress
+                </button>
+                <button onclick="filterPosts('academic')" class="category-btn px-6 py-2 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-purple-500 hover:text-white transition">
+                    Academic
+                </button>
+                <button onclick="filterPosts('relationships')" class="category-btn px-6 py-2 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-purple-500 hover:text-white transition">
+                    Relationships
+                </button>
+                <button onclick="filterPosts('success_story')" class="category-btn px-6 py-2 rounded-full bg-gray-200 text-gray-700 font-semibold hover:bg-purple-500 hover:text-white transition">
+                    Success Stories
+                </button>
+            </div>
+        </div>
+
+        <!-- Community Posts -->
+        <div id="posts-container" class="space-y-6">
+            <div class="animate-pulse bg-white rounded-2xl p-6 shadow-lg">
+                <div class="h-6 bg-gray-200 rounded w-3/4 mb-4"></div>
+                <div class="h-20 bg-gray-200 rounded"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- New Post Modal -->
+    <div id="new-post-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl p-8 max-w-2xl w-full shadow-2xl">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-3xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Share Your Story</h2>
+                <button onclick="closeNewPostModal()" class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+            </div>
+            <form id="new-post-form" class="space-y-4">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Title</label>
+                    <input 
+                        type="text" 
+                        id="post-title" 
+                        required 
+                        maxlength="200"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition" 
+                        placeholder="Give your post a title..."
+                    >
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Category</label>
+                    <select 
+                        id="post-category" 
+                        required 
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
+                    >
+                        <option value="general">General</option>
+                        <option value="anxiety">Anxiety</option>
+                        <option value="depression">Depression</option>
+                        <option value="stress">Stress</option>
+                        <option value="academic">Academic</option>
+                        <option value="relationships">Relationships</option>
+                        <option value="self_care">Self Care</option>
+                        <option value="success_story">Success Story</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">Your Story</label>
+                    <textarea 
+                        id="post-content" 
+                        required 
+                        maxlength="2000"
+                        rows="6" 
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition" 
+                        placeholder="Share your experience, thoughts, or ask for support... (Your identity remains anonymous)"
+                    ></textarea>
+                    <p class="text-sm text-gray-500 mt-1">Your post will be anonymous. You'll be assigned a random supportive name.</p>
+                </div>
+                <button 
+                    type="submit" 
+                    class="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:shadow-xl transition transform hover:scale-105 font-bold text-lg"
+                >
+                    <i class="fas fa-paper-plane mr-2"></i>Share Anonymously
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Post Detail Modal -->
+    <div id="post-detail-modal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-white rounded-3xl p-8 max-w-3xl w-full shadow-2xl my-8">
+            <div class="flex justify-between items-start mb-6">
+                <div class="flex-1">
+                    <h2 id="detail-title" class="text-3xl font-bold text-gray-800"></h2>
+                    <p class="text-gray-600 mt-2">by <span id="detail-author" class="font-semibold"></span> • <span id="detail-date"></span></p>
+                </div>
+                <button onclick="closePostDetail()" class="text-gray-400 hover:text-gray-600 text-2xl ml-4">&times;</button>
+            </div>
+            <div id="detail-content" class="text-gray-700 mb-6 whitespace-pre-wrap"></div>
+            <div class="flex items-center space-x-4 mb-6">
+                <button onclick="likePost()" id="like-button" class="px-6 py-2 bg-gradient-to-r from-pink-500 to-red-500 text-white rounded-xl hover:shadow-lg transition font-semibold">
+                    <i class="fas fa-heart mr-2"></i><span id="like-count">0</span> Likes
+                </button>
+                <span class="text-gray-600" id="comment-count">0 Comments</span>
+            </div>
+
+            <!-- Comments -->
+            <div class="border-t pt-6">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Comments</h3>
+                <form id="comment-form" class="mb-6">
+                    <textarea 
+                        id="comment-input" 
+                        rows="3" 
+                        maxlength="1000"
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition mb-2" 
+                        placeholder="Share your thoughts or support..."
+                    ></textarea>
+                    <button 
+                        type="submit" 
+                        class="px-6 py-2 bg-purple-500 text-white rounded-xl hover:bg-purple-600 transition font-semibold"
+                    >
+                        <i class="fas fa-comment mr-2"></i>Add Comment
+                    </button>
+                </form>
+                <div id="comments-list" class="space-y-4"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/community.js"></script>
+</body>
+</html>

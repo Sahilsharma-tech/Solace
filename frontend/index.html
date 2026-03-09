@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solace - AI Mental Wellness for Youth</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#EC4899',
+                        accent: '#06B6D4',
+                        dark: '#1E1B4B',
+                        light: '#F3E8FF'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(236, 72, 153, 0.5); }
+        }
+        .float-animation { animation: float 3s ease-in-out infinite; }
+        .pulse-glow { animation: pulse-glow 2s ease-in-out infinite; }
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-50 to-cyan-50 min-h-screen overflow-x-hidden"
+    <!-- Hero Section -->
+    <div id="hero-section" class="min-h-screen flex items-center justify-center px-4 relative">
+        <!-- Floating background elements -->
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+            <div class="absolute top-40 right-10 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 1s"></div>
+            <div class="absolute -bottom-8 left-20 w-72 h-72 bg-cyan-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse" style="animation-delay: 2s"></div>
+        </div>
+
+        <div class="max-w-6xl w-full relative z-10">
+            <!-- Navigation -->
+            <nav class="flex justify-between items-center mb-16 glass-card rounded-2xl p-4 shadow-xl">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 rounded-xl flex items-center justify-center pulse-glow">
+                        <i class="fas fa-heart text-white text-xl"></i>
+                    </div>
+                    <span class="text-2xl md:text-3xl font-bold gradient-text">Solace</span>
+                </div>
+                <div id="auth-buttons" class="flex gap-3">
+                    <button onclick="showLoginModal()" class="px-4 md:px-6 py-2 md:py-3 text-purple-600 hover:bg-purple-50 font-semibold rounded-xl transition-all transform hover:scale-105">
+                        <i class="fas fa-sign-in-alt mr-2"></i>Login
+                    </button>
+                    <button onclick="showSignupModal()" class="px-4 md:px-6 py-2 md:py-3 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 text-white rounded-xl hover:shadow-2xl transition-all transform hover:scale-105 font-semibold pulse-glow">
+                        <i class="fas fa-rocket mr-2"></i>Get Started
+                    </button>
+                </div>
+            </nav>
+
+            <!-- Hero Content -->
+            <div class="text-center space-y-8 mt-12">
+                <div class="inline-block float-animation mb-6">
+                    <div class="text-8xl md:text-9xl">🌟</div>
+                </div>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold gradient-text leading-tight">
+                    Your Mental Wellness,<br>
+                    <span class="bg-gradient-to-r from-pink-600 via-purple-600 to-cyan-600 bg-clip-text text-transparent">Powered by AI</span>
+                </h1>
+                <p class="text-xl md:text-2xl lg:text-3xl text-gray-700 max-w-4xl mx-auto font-medium leading-relaxed">
+                    A <span class="text-purple-600 font-bold">safe space</span> for your mental health journey. 
+                    Chat with our <span class="text-pink-600 font-bold">empathetic AI</span>, 
+                    track your mood, and join a <span class="text-cyan-600 font-bold">supportive community</span>.
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 pt-6">
+                    <button onclick="showSignupModal()" class="px-10 py-5 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 text-white text-lg md:text-xl rounded-2xl hover:shadow-2xl transition-all transform hover:scale-110 font-bold pulse-glow">
+                        <i class="fas fa-sparkles mr-2"></i>Start Your Journey <i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                    <button onclick="scrollToFeatures()" class="px-10 py-5 glass-card text-purple-600 text-lg md:text-xl rounded-2xl hover:shadow-xl transition-all transform hover:scale-105 font-bold">
+                        <i class="fas fa-compass mr-2"></i>Explore Features
+                    </button>
+                </div>
+                
+                <!-- Stats Section -->
+                <div class="flex flex-wrap justify-center gap-8 pt-12">
+                    <div class="text-center">
+                        <div class="text-4xl md:text-5xl font-bold gradient-text">24/7</div>
+                        <div class="text-gray-600 font-medium mt-1">AI Support</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl md:text-5xl font-bold gradient-text">100%</div>
+                        <div class="text-gray-600 font-medium mt-1">Anonymous</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-4xl md:text-5xl font-bold gradient-text">Free</div>
+                        <div class="text-gray-600 font-medium mt-1">Forever</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Preview -->
+            <div id="features-preview" class="grid md:grid-cols-3 gap-6 mt-24">
+                <div class="glass-card rounded-3xl p-8 hover:shadow-2xl transition-all transform hover:-translate-y-3 hover:scale-105 group">
+                    <div class="text-6xl mb-6 float-animation">💬</div>
+                    <h3 class="text-2xl font-bold text-purple-600 mb-3 group-hover:scale-110 transition-transform">AI Companion</h3>
+                    <p class="text-gray-700 text-lg leading-relaxed">Chat with an empathetic AI that understands you, provides support, and offers personalized wellness suggestions 24/7</p>
+                    <div class="mt-6 flex items-center text-purple-600 font-semibold">
+                        <span>Learn more</span>
+                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+                <div class="glass-card rounded-3xl p-8 hover:shadow-2xl transition-all transform hover:-translate-y-3 hover:scale-105 group">
+                    <div class="text-6xl mb-6 float-animation" style="animation-delay: 0.2s">📊</div>
+                    <h3 class="text-2xl font-bold text-pink-600 mb-3 group-hover:scale-110 transition-transform">Mood Tracking</h3>
+                    <p class="text-gray-700 text-lg leading-relaxed">Track, visualize, and understand your emotions with AI-powered insights and beautiful charts</p>
+                    <div class="mt-6 flex items-center text-pink-600 font-semibold">
+                        <span>Learn more</span>
+                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+                <div class="glass-card rounded-3xl p-8 hover:shadow-2xl transition-all transform hover:-translate-y-3 hover:scale-105 group">
+                    <div class="text-6xl mb-6 float-animation" style="animation-delay: 0.4s">🧘</div>
+                    <h3 class="text-2xl font-bold text-cyan-600 mb-3 group-hover:scale-110 transition-transform">Wellness Tools</h3>
+                    <p class="text-gray-700 text-lg leading-relaxed">Guided breathing exercises, meditation, yoga stretches, and personalized music therapy</p>
+                    <div class="mt-6 flex items-center text-cyan-600 font-semibold">
+                        <span>Learn more</span>
+                        <i class="fas fa-arrow-right ml-2 group-hover:translate-x-2 transition-transform"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="login-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+        <div class="glass-card rounded-3xl p-10 max-w-lg w-full shadow-2xl transform transition-all scale-95 hover:scale-100">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-4xl font-bold gradient-text">Welcome Back! 👋</h2>
+                <button onclick="closeModal('login-modal')" class="text-gray-400 hover:text-gray-600 text-3xl hover:rotate-90 transition-transform">&times;</button>
+            </div>
+            <form id="login-form" class="space-y-6">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-3 text-lg">
+                        <i class="fas fa-envelope text-purple-500 mr-2"></i>Email
+                    </label>
+                    <input type="email" id="login-email" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-lg" placeholder="your@email.com">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-3 text-lg">
+                        <i class="fas fa-lock text-purple-500 mr-2"></i>Password
+                    </label>
+                    <input type="password" id="login-password" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-lg" placeholder="••••••••">
+                </div>
+                <button type="submit" class="w-full py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 text-white text-lg rounded-xl hover:shadow-2xl transition-all transform hover:scale-105 font-bold pulse-glow">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Login to Solace
+                </button>
+            </form>
+            <p class="text-center text-gray-600 mt-6 text-lg">
+                New here? <button onclick="showSignupModal()" class="text-purple-600 hover:underline font-bold">Create an account</button> ✨
+            </p>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div id="signup-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fade-in">
+        <div class="glass-card rounded-3xl p-10 max-w-lg w-full shadow-2xl transform transition-all scale-95 hover:scale-100">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-4xl font-bold gradient-text">Join Solace 🌟</h2>
+                <button onclick="closeModal('signup-modal')" class="text-gray-400 hover:text-gray-600 text-3xl hover:rotate-90 transition-transform">&times;</button>
+            </div>
+            <form id="signup-form" class="space-y-5">
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-3 text-lg">
+                        <i class="fas fa-user text-purple-500 mr-2"></i>Display Name
+                    </label>
+                    <input type="text" id="signup-name" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-lg" placeholder="Your name">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-3 text-lg">
+                        <i class="fas fa-envelope text-purple-500 mr-2"></i>Email
+                    </label>
+                    <input type="email" id="signup-email" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-lg" placeholder="your@email.com">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-3 text-lg">
+                        <i class="fas fa-birthday-cake text-purple-500 mr-2"></i>Age
+                    </label>
+                    <input type="number" id="signup-age" min="13" max="30" required class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-lg" placeholder="18">
+                </div>
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-3 text-lg">
+                        <i class="fas fa-lock text-purple-500 mr-2"></i>Password
+                    </label>
+                    <input type="password" id="signup-password" required minlength="6" class="w-full px-5 py-4 rounded-xl border-2 border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-200 transition-all text-lg" placeholder="••••••••">
+                    <p class="text-sm text-gray-500 mt-2">Minimum 6 characters</p>
+                </div>
+                <button type="submit" class="w-full py-4 bg-gradient-to-r from-purple-500 via-pink-500 to-purple-600 text-white text-lg rounded-xl hover:shadow-2xl transition-all transform hover:scale-105 font-bold pulse-glow">
+                    <i class="fas fa-rocket mr-2"></i>Create Account
+                </button>
+            </form>
+            <p class="text-center text-gray-600 mt-6 text-lg">
+                Already have an account? <button onclick="showLoginModal()" class="text-purple-600 hover:underline font-bold">Login</button> 💫
+            </p>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="/js/main.js"></script>
+</body>
+</html>

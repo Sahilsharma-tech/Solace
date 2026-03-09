@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker - Solace</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8B5CF6',
+                        secondary: '#EC4899',
+                        accent: '#06B6D4',
+                        dark: '#1E1B4B',
+                        light: '#F3E8FF'
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-purple-50 via-pink-
+
+50 to-cyan-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white/80 backdrop-blur-lg shadow-lg sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">S</span>
+                    </div>
+                    <span class="text-2xl font-bold bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">Solace</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-6">
+                    <a href="/pages/dashboard.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-home mr-2"></i>Dashboard
+                    </a>
+                    <a href="/pages/chatbot.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-comments mr-2"></i>Chat
+                    </a>
+                    <a href="/pages/mood-tracker.html" class="text-purple-600 hover:text-purple-700 font-semibold transition">
+                        <i class="fas fa-smile mr-2"></i>Mood
+                    </a>
+                    <a href="/pages/yoga.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-spa mr-2"></i>Wellness
+                    </a>
+                    <a href="/pages/music.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-music mr-2"></i>Music
+                    </a>
+                    <a href="/pages/community.html" class="text-gray-600 hover:text-purple-600 font-medium transition">
+                        <i class="fas fa-users mr-2"></i>Community
+                    </a>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <div class="bg-gradient-to-r from-yellow-400 to-orange-400 text-white px-4 py-2 rounded-full font-bold">
+                        <i class="fas fa-star mr-1"></i><span id="points-count">0</span>
+                    </div>
+                    <button onclick="logout()" class="text-gray-600 hover:text-red-600 transition">
+                        <i class="fas fa-sign-out-alt text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-pink-500 to-purple-500 rounded-3xl p-8 text-white mb-8 shadow-xl">
+            <h1 class="text-4xl font-bold mb-2">How are you feeling? 😊</h1>
+            <p class="text-xl opacity-90">Track your emotions and understand your patterns</p>
+        </div>
+
+        <!-- Mood Selection -->
+        <div class="bg-white rounded-3xl p-8 mb-8 shadow-lg">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Select Your Mood</h2>
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+                <button onclick="selectMood('very_happy', 10)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😄</div>
+                    <p class="font-semibold text-gray-700">Very Happy</p>
+                </button>
+                <button onclick="selectMood('happy', 8)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😊</div>
+                    <p class="font-semibold text-gray-700">Happy</p>
+                </button>
+                <button onclick="selectMood('neutral', 5)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😐</div>
+                    <p class="font-semibold text-gray-700">Neutral</p>
+                </button>
+                <button onclick="selectMood('sad', 3)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😔</div>
+                    <p class="font-semibold text-gray-700">Sad</p>
+                </button>
+                <button onclick="selectMood('very_sad', 1)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😢</div>
+                    <p class="font-semibold text-gray-700">Very Sad</p>
+                </button>
+                <button onclick="selectMood('anxious', 4)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😰</div>
+                    <p class="font-semibold text-gray-700">Anxious</p>
+                </button>
+                <button onclick="selectMood('stressed', 4)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😣</div>
+                    <p class="font-semibold text-gray-700">Stressed</p>
+                </button>
+                <button onclick="selectMood('calm', 7)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😌</div>
+                    <p class="font-semibold text-gray-700">Calm</p>
+                </button>
+                <button onclick="selectMood('energetic', 8)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">🤩</div>
+                    <p class="font-semibold text-gray-700">Energetic</p>
+                </button>
+                <button onclick="selectMood('tired', 4)" class="mood-btn p-6 rounded-2xl border-2 border-gray-200 hover:border-purple-500 transition transform hover:scale-105">
+                    <div class="text-6xl mb-2">😴</div>
+                    <p class="font-semibold text-gray-700">Tired</p>
+                </button>
+            </div>
+
+            <!-- Mood Details Form -->
+            <form id="mood-form" class="space-y-4">
+                <input type="hidden" id="selected-mood" name="mood">
+                <input type="hidden" id="mood-score" name="moodScore">
+
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">How would you describe your day?</label>
+                    <textarea 
+                        id="mood-notes" 
+                        rows="3" 
+                        class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition"
+                        placeholder="Share your thoughts... (optional)"
+                    ></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-gray-700 font-semibold mb-2">What did you do today?</label>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="activities" value="exercise" class="rounded text-purple-500">
+                            <span>Exercise</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="activities" value="work" class="rounded text-purple-500">
+                            <span>Work</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="activities" value="study" class="rounded text-purple-500">
+                            <span>Study</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="activities" value="social" class="rounded text-purple-500">
+                            <span>Social</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="activities" value="sleep" class="rounded text-purple-500">
+                            <span>Sleep</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="activities" value="relaxation" class="rounded text-purple-500">
+                            <span>Relaxation</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" name="activities" value="other" class="rounded text-purple-500">
+                            <span>Other</span>
+                        </label>
+                    </div>
+                </div>
+
+                <button 
+                    type="submit" 
+                    class="w-full py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:shadow-xl transition transform hover:scale-105 font-bold text-lg"
+                >
+                    <i class="fas fa-save mr-2"></i>Log My Mood
+                </button>
+            </form>
+        </div>
+
+        <!-- AI Suggestion -->
+        <div id="ai-suggestion" class="hidden bg-gradient-to-r from-teal-400 to-cyan-400 rounded-3xl p-8 mb-8 text-white shadow-lg">
+            <h2 class="text-2xl font-bold mb-4">💡 Your Personalized Suggestion</h2>
+            <p id="suggestion-text" class="text-lg"></p>
+        </div>
+
+        <!-- Mood History & Stats -->
+        <div class="grid md:grid-cols-2 gap-8">
+            <!-- Mood Chart -->
+            <div class="bg-white rounded-3xl p-8 shadow-lg">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Your Mood Journey (Last 7 Days)</h2>
+                <canvas id="mood-history-chart"></canvas>
+            </div>
+
+            <!-- Mood Statistics -->
+            <div class="bg-white rounded-3xl p-8 shadow-lg">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Mood Insights</h2>
+                <div class="space-y-4">
+                    <div class="bg-purple-100 rounded-xl p-4">
+                        <p class="text-gray-700 font-medium mb-1">Average Mood Score</p>
+                        <p class="text-3xl font-bold text-purple-600"><span id="avg-mood">-</span>/10</p>
+                    </div>
+                    <div class="bg-pink-100 rounded-xl p-4">
+                        <p class="text-gray-700 font-medium mb-1">Most Common Mood</p>
+                        <p class="text-3xl font-bold text-pink-600" id="common-mood">-</p>
+                    </div>
+                    <div class="bg-cyan-100 rounded-xl p-4">
+                        <p class="text-gray-700 font-medium mb-1">Total Entries</p>
+                        <p class="text-3xl font-bold text-cyan-600"><span id="total-entries">0</span> logged</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/js/main.js"></script>
+    <script src="/js/mood.js"></script>
+</body>
+</html>
